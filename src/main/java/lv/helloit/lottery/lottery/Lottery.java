@@ -1,11 +1,16 @@
 package lv.helloit.lottery.lottery;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import lv.helloit.lottery.user.User;
+
 import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
-@Table(name = "VS_LOTTERY")
+@Table(name = "VS_LOTTERIES")
 public class Lottery {
 
     @Id
@@ -22,16 +27,23 @@ public class Lottery {
     private Date startDate;
     @Column(name = "end_date")
     private Date endDate;
+    @Column(name = "winner_code")
+    private Integer winnerCode;
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "lottery")
+    @JsonManagedReference
+    @JsonIgnore
+    private List<User> userList;
 
     public Lottery() {
     }
 
-    public Lottery(String title, boolean open, Integer limit, Date startDate, Date endDate) {
+    public Lottery(String title, boolean open, Integer limit, Date startDate, Date endDate, Integer winnerCode) {
         this.title = title;
         this.open = open;
         this.limit = limit;
         this.startDate = startDate;
         this.endDate = endDate;
+        this.winnerCode = winnerCode;
     }
 
     @Override
@@ -43,6 +55,7 @@ public class Lottery {
                 ", limit=" + limit +
                 ", startDate=" + startDate +
                 ", endDate=" + endDate +
+                ", winnerCode=" + winnerCode +
                 '}';
     }
 
@@ -56,12 +69,13 @@ public class Lottery {
                 Objects.equals(title, lottery.title) &&
                 Objects.equals(limit, lottery.limit) &&
                 Objects.equals(startDate, lottery.startDate) &&
-                Objects.equals(endDate, lottery.endDate);
+                Objects.equals(endDate, lottery.endDate) &&
+                Objects.equals(winnerCode, lottery.winnerCode);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, title, open, limit, startDate, endDate);
+        return Objects.hash(id, title, open, limit, startDate, endDate, winnerCode);
     }
 
     public Long getId() {
@@ -88,6 +102,10 @@ public class Lottery {
         return endDate;
     }
 
+    public Integer getWinnerCode() {
+        return winnerCode;
+    }
+
     public void setTitle(String title) {
         this.title = title;
     }
@@ -106,5 +124,17 @@ public class Lottery {
 
     public void setEndDate(Date endDate) {
         this.endDate = endDate;
+    }
+
+    public void setWinnerCode(Integer winnerCode) {
+        this.winnerCode = winnerCode;
+    }
+
+    public List<User> getUserList() {
+        return userList;
+    }
+
+    public void setUserList(List<User> userList) {
+        this.userList = userList;
     }
 }

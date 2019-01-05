@@ -1,12 +1,13 @@
-package lv.helloit.lottery.lottery;
+package lv.helloit.lottery.response;
 
-public class StartRegistrationResponse {
+public class Response {
 
     private String status;
     private Long id;
+    private Integer winnerCode;
     private String reason;
 
-    public StartRegistrationResponse() {
+    public Response() {
     }
 
     public String getStatus() {
@@ -23,6 +24,14 @@ public class StartRegistrationResponse {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Integer getWinnerCode() {
+        return winnerCode;
+    }
+
+    public void setWinnerCode(Integer winnerCode) {
+        this.winnerCode = winnerCode;
     }
 
     public String getReason() {

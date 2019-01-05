@@ -1,5 +1,7 @@
 package lv.helloit.lottery.lottery;
 
+import lv.helloit.lottery.response.Response;
+import lv.helloit.lottery.user.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,22 +22,17 @@ public class LotteryController {
     }
 
     @PostMapping("/start-registration")
-    public StartRegistrationResponse startRegistration(@RequestBody Lottery lottery) {
+    public Response startRegistration(@RequestBody Lottery lottery) {
 
-        StartRegistrationResponse startRegistrationResponse = new StartRegistrationResponse();
-        Long id = lotteryService.openLottery(lottery);
+        LOGGER.info("Starting registration. Lottery: " + lottery.getTitle());
+        return lotteryService.openLottery(lottery);
 
-        if (id != null) {
-            startRegistrationResponse.setStatus("OK");
-            startRegistrationResponse.setId(id);
-        } else {
-            startRegistrationResponse.setStatus("Fail");
-            startRegistrationResponse.setReason("Reason"); //todo
-        }
+    }
 
-        LOGGER.info("Started registration. Lottery: " + lottery.getTitle() + ". Status: " + startRegistrationResponse.getStatus());
-
-        return startRegistrationResponse;
+    @PostMapping("register")
+    public Response register(@RequestBody User user) {
+        LOGGER.info("Registering user.");
+        return lotteryService.registerUser(user);
     }
 
 }
