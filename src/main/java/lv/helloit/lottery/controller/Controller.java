@@ -8,9 +8,7 @@ import lv.helloit.lottery.user.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class Controller {
@@ -38,6 +36,12 @@ public class Controller {
     public Response register(@RequestBody User user) {
         LOGGER.info("Registering user.");
         return userService.registerUser(user);
+    }
+
+    @PutMapping("/stop-registration/{id}")
+    public Response stopRegistartion (@PathVariable Long id) {
+        LOGGER.info("Stopping registration. Lottery ID: " + id);
+        return lotteryService.closeLottery(id);
     }
 
 }

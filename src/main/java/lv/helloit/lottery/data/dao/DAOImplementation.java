@@ -85,7 +85,7 @@ public abstract class DAOImplementation<T> implements DAO<T> {
         Session session = sessionFactory.openSession();
         Transaction tx = session.beginTransaction();
 
-        session.update(obj);
+        session.merge(obj);
 
         tx.commit();
         session.close();

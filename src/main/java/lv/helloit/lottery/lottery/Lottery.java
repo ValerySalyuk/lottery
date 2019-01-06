@@ -28,7 +28,7 @@ public class Lottery {
     @Column(name = "end_date")
     private Date endDate;
     @Column(name = "winner_code")
-    private Integer winnerCode;
+    private String winnerCode;
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "lottery")
     @JsonManagedReference
     @JsonIgnore
@@ -37,7 +37,7 @@ public class Lottery {
     public Lottery() {
     }
 
-    public Lottery(String title, boolean open, Integer limit, Date startDate, Date endDate, Integer winnerCode) {
+    public Lottery(String title, boolean open, Integer limit, Date startDate, Date endDate, String winnerCode) {
         this.title = title;
         this.open = open;
         this.limit = limit;
@@ -102,7 +102,7 @@ public class Lottery {
         return endDate;
     }
 
-    public Integer getWinnerCode() {
+    public String getWinnerCode() {
         return winnerCode;
     }
 
@@ -126,7 +126,7 @@ public class Lottery {
         this.endDate = endDate;
     }
 
-    public void setWinnerCode(Integer winnerCode) {
+    public void setWinnerCode(String winnerCode) {
         this.winnerCode = winnerCode;
     }
 
