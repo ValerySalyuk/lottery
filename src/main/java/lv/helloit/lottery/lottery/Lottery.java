@@ -137,4 +137,8 @@ public class Lottery {
     public void setUserList(List<User> userList) {
         this.userList = userList;
     }
+
+    public Integer userCount() {
+        return userList.size();
+    }
 }

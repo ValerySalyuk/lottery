@@ -31,7 +31,13 @@ public class UserService {
             user.setLottery(wrappedLottery.get());
         }
 
-        if (!isAdult(user)) {
+        if (!user.getLottery().isOpen()) {
+            response.setStatus("Fail");
+            response.setReason("Lottery with ID: " + user.getLotteryId() + " is closed");
+        } else if (limitReached(user.getLottery())) {
+            response.setStatus("Fail");
+            response.setReason("Participants limit is reached");
+        }else if (!isAdult(user)) {
             response.setStatus("Fail");
             response.setReason("Participation allowed only from 21 years");
         } else if(!hasValidEmail(user)) {
@@ -54,6 +60,10 @@ public class UserService {
 
     private boolean isAdult(User user) {
         return user.getAge() >= 21;
+    }
+
+    private boolean limitReached(Lottery lottery) {
+        return lottery.getUserList().size() == lottery.getLimit();
     }
 
     private boolean hasValidEmail(User user) {

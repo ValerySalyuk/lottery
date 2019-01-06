@@ -28,7 +28,7 @@ public class Controller {
     public Response startRegistration(@RequestBody Lottery lottery) {
 
         LOGGER.info("Starting registration. Lottery: " + lottery.getTitle());
-        return lotteryService.openLottery(lottery);
+        return lotteryService.openRegistration(lottery);
 
     }
 
@@ -41,7 +41,14 @@ public class Controller {
     @PutMapping("/stop-registration/{id}")
     public Response stopRegistartion (@PathVariable Long id) {
         LOGGER.info("Stopping registration. Lottery ID: " + id);
-        return lotteryService.closeLottery(id);
+        return lotteryService.closeRegistration(id);
+    }
+
+    @PutMapping("/choose-winner/{id}")
+
+    public Response chooseWinner(@PathVariable Long id) {
+        LOGGER.info("Choosing winner. Lottery ID: " + id);
+        return lotteryService.chooseWinner(id);
     }
 
 }

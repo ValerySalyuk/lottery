@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.Optional;
+import java.util.Random;
 
 @Service
 public class LotteryService {
@@ -20,7 +21,7 @@ public class LotteryService {
         this.lotteryDAOImplementation = lotteryDAOImplementation;
     }
 
-    public Response openLottery(Lottery lottery) {
+    public Response openRegistration(Lottery lottery) {
 
         Response response = new Response();
 
@@ -39,9 +40,10 @@ public class LotteryService {
         return response;
     }
 
-    public Response closeLottery(Long id) {
+    public Response closeRegistration(Long id) {
 
         Response response = new Response();
+        response.setStatus("Fail");
 
         Optional<Lottery> wrappedLottery = lotteryDAOImplementation.getById(id);
         Lottery lottery;
@@ -49,19 +51,51 @@ public class LotteryService {
         if (wrappedLottery.isPresent()) {
             lottery = wrappedLottery.get();
             if (!lottery.isOpen()) {
-                response.setStatus("Fail");
                 response.setReason("Lottery with ID: " + id + " is already stopped");
             } else {
                 lottery.setOpen(false);
+                lottery.setEndDate(new Date());
                 lotteryDAOImplementation.update(lottery);
                 response.setStatus("OK");
             }
         } else {
-            response.setStatus("Fail");
             response.setReason("Lottery with ID: " + id + " does not exist");
         }
 
         return response;
+    }
+
+    public Response chooseWinner(Long id) {
+
+        Response response = new Response();
+        response.setStatus("Fail");
+
+        Optional<Lottery> wrappedLottery = lotteryDAOImplementation.getById(id);
+        Lottery lottery;
+
+        if (wrappedLottery.isPresent()) {
+            lottery = wrappedLottery.get();
+            if (lottery.isOpen()) {
+                response.setReason("Lottery with ID: " + id + " is still open for registration");
+            } else if (lottery.getWinnerCode() != null) {
+                response.setReason("Lottery with ID: " + id + " already has a winner");
+            } else if (lottery.getUserList() == null) {
+                response.setReason("Lottery with ID: " + id + " has no participants");
+            } else {
+                Random random = new Random();
+                int winner = random.nextInt(lottery.getUserList().size()) + 1;
+                String winCode = lottery.getUserList().get(winner - 1).getCode();
+                lottery.setWinnerCode(winCode);
+                lotteryDAOImplementation.update(lottery);
+                response.setStatus("OK");
+                response.setWinnerCode(winCode);
+            }
+        } else {
+            response.setReason("Lottery with ID: " + id + " does not exist");
+        }
+
+        return response;
+
     }
 
 }

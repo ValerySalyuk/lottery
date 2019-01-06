@@ -35,7 +35,7 @@ public class UserServiceTest {
 
     @Test
     public void shouldRegisterUser() {
-        lotteryService.openLottery(lottery);
+        lotteryService.openRegistration(lottery);
         Response response = userService.registerUser(user);
         assertEquals("OK", response.getStatus());
     }

@@ -4,7 +4,7 @@ public class Response {
 
     private String status;
     private Long id;
-    private Integer winnerCode;
+    private String winnerCode;
     private String reason;
 
     public Response() {
@@ -26,11 +26,11 @@ public class Response {
         this.id = id;
     }
 
-    public Integer getWinnerCode() {
+    public String getWinnerCode() {
         return winnerCode;
     }
 
-    public void setWinnerCode(Integer winnerCode) {
+    public void setWinnerCode(String winnerCode) {
         this.winnerCode = winnerCode;
     }
 
