@@ -1,7 +1,10 @@
-package lv.helloit.lottery.lottery;
+package lv.helloit.lottery.controller;
 
+import lv.helloit.lottery.lottery.Lottery;
+import lv.helloit.lottery.lottery.LotteryService;
 import lv.helloit.lottery.response.Response;
 import lv.helloit.lottery.user.User;
+import lv.helloit.lottery.user.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,15 +13,17 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-public class LotteryController {
+public class Controller {
 
-    private final static Logger LOGGER = LoggerFactory.getLogger(LotteryController.class);
+    private final static Logger LOGGER = LoggerFactory.getLogger(Controller.class);
 
     private final LotteryService lotteryService;
+    private final UserService userService;
 
     @Autowired
-    public LotteryController(LotteryService lotteryService) {
+    public Controller(LotteryService lotteryService, UserService userService) {
         this.lotteryService = lotteryService;
+        this.userService = userService;
     }
 
     @PostMapping("/start-registration")
@@ -29,10 +34,10 @@ public class LotteryController {
 
     }
 
-    @PostMapping("register")
+    @PostMapping("/register")
     public Response register(@RequestBody User user) {
         LOGGER.info("Registering user.");
-        return lotteryService.registerUser(user);
+        return userService.registerUser(user);
     }
 
 }

@@ -20,18 +20,18 @@ public class User {
     @Column(name = "age")
     private Byte age;
     @Column(name = "code")
-    private Integer code;
-    @Column(name = "lottery_id")
-    private Long lotteryId;
+    private String code;
     @ManyToOne
     @JoinColumn(name = "lottery_id")
     @JsonBackReference
     private Lottery lottery;
 
+    private Long lotteryId;
+
     public User() {
     }
 
-    public User(String email, Byte age, Integer code, Long lotteryId, Lottery lottery) {
+    public User(String email, Byte age, String code, Long lotteryId, Lottery lottery) {
         this.email = email;
         this.age = age;
         this.code = code;
@@ -89,20 +89,12 @@ public class User {
         this.age = age;
     }
 
-    public Integer getCode() {
+    public String getCode() {
         return code;
     }
 
-    public void setCode(Integer code) {
+    public void setCode(String code) {
         this.code = code;
-    }
-
-    public Long getLotteryId() {
-        return lotteryId;
-    }
-
-    public void setLotteryId(Long lotteryId) {
-        this.lotteryId = lotteryId;
     }
 
     public Lottery getLottery() {
@@ -111,5 +103,13 @@ public class User {
 
     public void setLottery(Lottery lottery) {
         this.lottery = lottery;
+    }
+
+    public Long getLotteryId() {
+        return lotteryId;
+    }
+
+    public void setLotteryId(Long lotteryId) {
+        this.lotteryId = lotteryId;
     }
 }
