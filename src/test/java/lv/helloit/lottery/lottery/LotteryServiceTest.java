@@ -46,21 +46,57 @@ public class LotteryServiceTest {
 
     @Test
     public void shouldCloseLottery() {
-        lotteryService.openRegistration(lottery);
-        Response response = lotteryService.closeRegistration(1L);
 
+        Response response;
+
+        lotteryService.openRegistration(lottery);
+
+        response = lotteryService.closeRegistration(1L);
         assertEquals("OK", response.getStatus());
+
+        response = lotteryService.closeRegistration(1L);
+        assertEquals("Fail", response.getStatus());
     }
 
     @Test
     public void shouldChooseWinner() {
+
+        Response response;
+
         lotteryService.openRegistration(lottery);
+        response = lotteryService.chooseWinner(1L);
+        assertEquals("Fail", response.getStatus());
+
         userService.registerUser(user1);
         userService.registerUser(user2);
-        lotteryService.closeRegistration(1L);
-        Response response = lotteryService.chooseWinner(1L);
+        response = lotteryService.chooseWinner(1L);
+        assertEquals("Fail", response.getStatus());
 
+        lotteryService.closeRegistration(1L);
+        response = lotteryService.chooseWinner(1L);
         assertEquals("OK", response.getStatus());
+    }
+
+    @Test
+    public void shouldReturnStatus() {
+
+        Response response;
+
+        lotteryService.openRegistration(lottery);
+        response = lotteryService.getStatus(user1.getId(), user1.getEmail(), user1.getCode());
+        assertEquals("ERROR", response.getStatus());
+
+        userService.registerUser(user1);
+        response = lotteryService.getStatus(user1.getId(), user1.getEmail(), user1.getCode());
+        assertEquals("PENDING", response.getStatus());
+
+        lotteryService.closeRegistration(1L);
+        response = lotteryService.getStatus(user1.getId(), user1.getEmail(), user1.getCode());
+        assertEquals("PENDING", response.getStatus());
+
+        lotteryService.chooseWinner(1L);
+        response = lotteryService.getStatus(user1.getId(), user1.getEmail(), user1.getCode());
+        assertEquals("WIN", response.getStatus());
     }
 
 }

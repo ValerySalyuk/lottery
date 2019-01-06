@@ -3,6 +3,7 @@ package lv.helloit.lottery.lottery;
 import lv.helloit.lottery.data.dao.LotteryDAOImplementation;
 import lv.helloit.lottery.response.Response;
 import lv.helloit.lottery.user.User;
+import lv.helloit.lottery.validator.Validator;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -48,7 +49,9 @@ public class LotteryService {
         Optional<Lottery> wrappedLottery = lotteryDAOImplementation.getById(id);
         Lottery lottery;
 
-        if (wrappedLottery.isPresent()) {
+        if (!Validator.lotteryExists(id, lotteryDAOImplementation)) {
+            response.setReason("Lottery with ID: " + id + " does not exist");
+        } else {
             lottery = wrappedLottery.get();
             if (!lottery.isOpen()) {
                 response.setReason("Lottery with ID: " + id + " is already stopped");
@@ -58,8 +61,6 @@ public class LotteryService {
                 lotteryDAOImplementation.update(lottery);
                 response.setStatus("OK");
             }
-        } else {
-            response.setReason("Lottery with ID: " + id + " does not exist");
         }
 
         return response;
@@ -73,13 +74,15 @@ public class LotteryService {
         Optional<Lottery> wrappedLottery = lotteryDAOImplementation.getById(id);
         Lottery lottery;
 
-        if (wrappedLottery.isPresent()) {
+        if (!Validator.lotteryExists(id, lotteryDAOImplementation)) {
+            response.setReason("Lottery with ID: " + id + " does not exist");
+        } else {
             lottery = wrappedLottery.get();
             if (lottery.isOpen()) {
                 response.setReason("Lottery with ID: " + id + " is still open for registration");
-            } else if (lottery.getWinnerCode() != null) {
+            } else if (Validator.lotteryHasWinner(lottery)) {
                 response.setReason("Lottery with ID: " + id + " already has a winner");
-            } else if (lottery.getUserList() == null) {
+            } else if (!Validator.lotteryHasUsers(lottery)) {
                 response.setReason("Lottery with ID: " + id + " has no participants");
             } else {
                 Random random = new Random();
@@ -90,8 +93,31 @@ public class LotteryService {
                 response.setStatus("OK");
                 response.setWinnerCode(winCode);
             }
+        }
+
+        return response;
+
+    }
+
+    public Response getStatus(Long lotteryId, String email, String code) {
+
+        Response response = new Response();
+        response.setStatus("ERROR");
+
+        if (!Validator.lotteryExists(lotteryId, lotteryDAOImplementation)) {
+            response.setReason("Lottery with ID: " + lotteryId + " does not exist");
+        } else if (!Validator.userInLotteryExists(lotteryId, email, code, lotteryDAOImplementation)) {
+            response.setReason("There is no such user in lottery with ID: " + lotteryId);
         } else {
-            response.setReason("Lottery with ID: " + id + " does not exist");
+            Optional<Lottery> wrappedLottery = lotteryDAOImplementation.getById(lotteryId);
+            Lottery lottery = wrappedLottery.get();
+            if (lottery.isOpen() || !Validator.lotteryHasWinner(lottery)) {
+                response.setStatus("PENDING");
+            } else if (lottery.getWinnerCode().equals(code)) {
+                response.setStatus("WIN");
+            } else {
+                response.setStatus("LOOSE");
+            }
         }
 
         return response;

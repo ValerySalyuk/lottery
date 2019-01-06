@@ -45,10 +45,17 @@ public class Controller {
     }
 
     @PutMapping("/choose-winner/{id}")
-
     public Response chooseWinner(@PathVariable Long id) {
         LOGGER.info("Choosing winner. Lottery ID: " + id);
         return lotteryService.chooseWinner(id);
+    }
+
+    @GetMapping("/status")
+    public Response getStatus(@RequestParam("id") Long lotteryId,
+                               @RequestParam("email") String email,
+                               @RequestParam("code") String code) {
+        LOGGER.info("Status request. Lottery ID: " + lotteryId + ". E-mail: " + email + ". Codse: " + code);
+        return lotteryService.getStatus(lotteryId, email, code);
     }
 
 }

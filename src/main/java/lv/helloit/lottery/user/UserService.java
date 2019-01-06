@@ -4,10 +4,10 @@ import lv.helloit.lottery.data.dao.LotteryDAOImplementation;
 import lv.helloit.lottery.data.dao.UserDAOImplementation;
 import lv.helloit.lottery.lottery.Lottery;
 import lv.helloit.lottery.response.Response;
+import lv.helloit.lottery.validator.Validator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -34,19 +34,19 @@ public class UserService {
         if (!user.getLottery().isOpen()) {
             response.setStatus("Fail");
             response.setReason("Lottery with ID: " + user.getLotteryId() + " is closed");
-        } else if (limitReached(user.getLottery())) {
+        } else if (Validator.limitReached(user.getLottery())) {
             response.setStatus("Fail");
             response.setReason("Participants limit is reached");
-        }else if (!isAdult(user)) {
+        }else if (!Validator.isAdult(user)) {
             response.setStatus("Fail");
             response.setReason("Participation allowed only from 21 years");
-        } else if(!hasValidEmail(user)) {
+        } else if(!Validator.emailValid(user.getEmail())) {
             response.setStatus("Fail");
             response.setReason("Invalid e-mail");
-        } else if (!hasValidCode(user)) {
+        } else if (!Validator.hasValidCode(user, lotteryDAOImplementation)) {
             response.setStatus("Fail");
             response.setReason("Code is invalid");
-        } else if (!codeUnique(user)) {
+        } else if (!Validator.codeUnique(user, userDAOImplementation)) {
             response.setStatus("Fail");
             response.setReason("This code is already registered");
         } else {
@@ -56,53 +56,6 @@ public class UserService {
 
         return response;
 
-    }
-
-    private boolean isAdult(User user) {
-        return user.getAge() >= 21;
-    }
-
-    private boolean limitReached(Lottery lottery) {
-        return lottery.getUserList().size() == lottery.getLimit();
-    }
-
-    private boolean hasValidEmail(User user) {
-        return user.getEmail().contains("@") && user.getEmail().contains(".");
-    }
-
-    private boolean hasValidCode(User user) {
-
-        Optional<Lottery> wrappedLottery = lotteryDAOImplementation.getById(user.getLottery().getId());
-
-        if (wrappedLottery.isPresent()) {
-
-            Lottery lottery = wrappedLottery.get();
-            String year = lottery.getStartDate().toString().substring(2, 4);
-            String month = lottery.getStartDate().toString().substring(5, 7);
-            String day = lottery.getStartDate().toString().substring(8, 10);
-
-            String validFirstPart = day + month + year + user.getEmail().length();
-
-            String userCodeFirstPart = user.getCode().substring(0, 8);
-
-            return userCodeFirstPart.equals(validFirstPart);
-
-        }
-
-        return false;
-    }
-
-    private boolean codeUnique(User user) {
-
-        List<User> userList = userDAOImplementation.getAll();
-
-        for (User u : userList) {
-            if (user.getCode().equals(u.getCode())) {
-                return false;
-            }
-        }
-
-        return true;
     }
 
 }
