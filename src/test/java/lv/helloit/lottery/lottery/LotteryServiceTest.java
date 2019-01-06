@@ -82,20 +82,23 @@ public class LotteryServiceTest {
 
         Response response;
 
+        response = lotteryService.getStatus(1L, user1.getEmail(), user1.getCode());
+        assertEquals("ERROR", response.getStatus());
+
         lotteryService.openRegistration(lottery);
-        response = lotteryService.getStatus(user1.getId(), user1.getEmail(), user1.getCode());
+        response = lotteryService.getStatus(1L, user1.getEmail(), user1.getCode());
         assertEquals("ERROR", response.getStatus());
 
         userService.registerUser(user1);
-        response = lotteryService.getStatus(user1.getId(), user1.getEmail(), user1.getCode());
+        response = lotteryService.getStatus(1L, user1.getEmail(), user1.getCode());
         assertEquals("PENDING", response.getStatus());
 
         lotteryService.closeRegistration(1L);
-        response = lotteryService.getStatus(user1.getId(), user1.getEmail(), user1.getCode());
+        response = lotteryService.getStatus(1L, user1.getEmail(), user1.getCode());
         assertEquals("PENDING", response.getStatus());
 
         lotteryService.chooseWinner(1L);
-        response = lotteryService.getStatus(user1.getId(), user1.getEmail(), user1.getCode());
+        response = lotteryService.getStatus(1L, user1.getEmail(), user1.getCode());
         assertEquals("WIN", response.getStatus());
     }
 

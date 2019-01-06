@@ -10,6 +10,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 public class Controller {
 
@@ -56,6 +58,12 @@ public class Controller {
                                @RequestParam("code") String code) {
         LOGGER.info("Status request. Lottery ID: " + lotteryId + ". E-mail: " + email + ". Codse: " + code);
         return lotteryService.getStatus(lotteryId, email, code);
+    }
+
+    @GetMapping("/stats")
+    public List<Lottery> getStats() {
+        LOGGER.info("Statistics request");
+        return lotteryService.getStats();
     }
 
 }
