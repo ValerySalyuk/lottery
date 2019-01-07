@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collection;
 import java.util.List;
 
 @RestController
@@ -61,9 +62,15 @@ public class Controller {
     }
 
     @GetMapping("/stats")
-    public List<Lottery> getStats() {
+    public Collection<Lottery> getStats() {
         LOGGER.info("Statistics request");
         return lotteryService.getStats();
+    }
+
+    @GetMapping("/lotteries")
+    public Collection<Lottery> getLotteries() {
+        LOGGER.info("Loading lotteries");
+        return lotteryService.getLotteries();
     }
 
 }

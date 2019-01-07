@@ -1,6 +1,7 @@
 package lv.helloit.lottery.user;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lv.helloit.lottery.lottery.Lottery;
 
 import javax.persistence.*;

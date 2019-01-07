@@ -43,7 +43,7 @@
         </property>
 
         <property name="hbm2ddl.auto">
-            create-drop
+            update
         </property>
 
     </session-factory>

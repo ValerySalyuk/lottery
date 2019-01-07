@@ -29,8 +29,8 @@ public class UserServiceTest {
 
     @Before
     public void setUp() {
-        lottery = new Lottery("Test lottery", true, 10, new Date(), null, null);
         user = new User("some@mail.com", (byte) 21, "0601191312345678", 1L, null);
+        lottery = new Lottery("Test lottery", true, 10, new Date(), null, null);
     }
 
     @Test

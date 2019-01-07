@@ -8,10 +8,7 @@ import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
-import java.util.Random;
+import java.util.*;
 
 @Service
 public class LotteryService {
@@ -126,7 +123,22 @@ public class LotteryService {
     }
 
     public List<Lottery> getStats() {
-        return lotteryDAOImplementation.getAll();
+        return new ArrayList<>(lotteryDAOImplementation.getAll());
+    }
+
+    public List<Lottery> getLotteries() {
+
+        List<Lottery> lotteriesSimplified = new ArrayList<>();
+        List<Lottery> actualLotteries = lotteryDAOImplementation.getAll();
+
+        for (Lottery l : actualLotteries) {
+            l.setUserList(null);
+            l.setWinnerCode(null);
+            l.setLimit(null);
+            lotteriesSimplified.add(l);
+        }
+
+        return lotteriesSimplified;
     }
 
 }
