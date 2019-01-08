@@ -162,7 +162,7 @@ public class LotteryService {
             lotteryDAOImplementation.delete(id);
             response.setStatus("OK");
         } else {
-            response.setStatus("Lottery with ID: " + id + " does not exist");
+            response.setReason("Lottery with ID: " + id + " does not exist");
         }
 
         return response;
