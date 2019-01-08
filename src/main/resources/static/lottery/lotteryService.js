@@ -23,7 +23,7 @@ function addLottery(lottery) {
         <td>
             <button class="btn btn-primary" onclick="registerUser(${lottery.id})"
                     ${lottery.open === false ? "disabled" : ""}>Register</button>
-            <button class="btn btn-primary" onclick="registerUser(${lottery.id})"
+            <button class="btn btn-primary" onclick="requestStatus(${lottery.id})"
                     ${lottery.open === true ? "disabled" : ""}>Request status</button>
         </td>
     `;
@@ -32,4 +32,8 @@ function addLottery(lottery) {
 
 function registerUser(id) {
     window.open("/user/register.html?lotteryId=" + id,"_self");
+}
+
+function requestStatus(id) {
+    window.open("/user/requestStatus.html?lotteryId=" + id,"_self");
 }

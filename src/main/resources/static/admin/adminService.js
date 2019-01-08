@@ -28,7 +28,10 @@ function addLottery(lottery) {
             <button class="btn btn-primary" onclick="closeLottery(${lottery.id})" 
                     ${lottery.open === false ? "disabled" : ""}>Close</button>
             <button class="btn btn-primary" onclick="chooseWinner(${lottery.id})"
-                    ${lottery.open === true ? "disabled" : ""} ${lottery.winnerCode === null ? "" : "disabled"}>Choose Winner</button>
+                    ${lottery.open === true ? "disabled" : ""}
+                    ${lottery.winnerCode === null ? "" : "disabled"}
+                    ${lottery.userList.length === 0 ? "disabled" : ""}>Choose Winner</button>
+            <button class="btn btn-primary" onclick="deleteLottery(${lottery.id})">Delete</button>
         </td>
     `;
     document.getElementById("table-body").appendChild(tr);
@@ -94,6 +97,23 @@ function startNewLottery() {
                 window.location.href = "adminTools.html";
             } else {
                 alert("Unable to start new lottery. Reason: " + response.reason);
+            }
+        });
+}
+
+function deleteLottery(id) {
+    fetch("/delete-lottery/" + id, {
+        method: "delete",
+        // headers: {
+        //     'Authorization': 'Basic ' + btoa(localStorage.getItem("currentUsername") + ":" + localStorage.getItem("currentPassword"))
+        // }
+    })
+        .then((resp) => resp.json())
+        .then(response => {
+            if (response.status === "OK") {
+                window.location.reload();
+            } else {
+                alert("Delete failed. Reason: " + response.reason);
             }
         });
 }

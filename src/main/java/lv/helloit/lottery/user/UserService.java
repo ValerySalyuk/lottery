@@ -25,29 +25,28 @@ public class UserService {
     public Response registerUser(User user) {
 
         Response response = new Response();
+        response.setStatus("Fail");
 
         Optional<Lottery> wrappedLottery = lotteryDAOImplementation.getById(user.getLotteryId());
         if (wrappedLottery.isPresent()) {
             user.setLottery(wrappedLottery.get());
         }
 
-        if (!user.getLottery().isOpen()) {
-            response.setStatus("Fail");
+        if (!Validator.lotteryExists(user.getLotteryId(), lotteryDAOImplementation)) {
+            response.setReason("Lottery with ID: " + user.getLotteryId() + " does not exist");
+        } else if (!user.getLottery().isOpen()) {
             response.setReason("Lottery with ID: " + user.getLotteryId() + " is closed");
-        } else if (Validator.limitReached(user.getLottery())) {
-            response.setStatus("Fail");
+        } else if (!Validator.userHasRequiredData(user)) {
+            response.setReason("Please provide all required data");
+        } else if (Validator.userLimitReached(user.getLottery())) {
             response.setReason("Participants limit is reached");
-        }else if (!Validator.isAdult(user)) {
-            response.setStatus("Fail");
-            response.setReason("Participation allowed only from 21 years");
-        } else if(!Validator.emailValid(user.getEmail())) {
-            response.setStatus("Fail");
+        } else if (!Validator.emailValid(user.getEmail())) {
             response.setReason("Invalid e-mail");
-        } else if (!Validator.hasValidCode(user, lotteryDAOImplementation)) {
-            response.setStatus("Fail");
-            response.setReason("Code is invalid");
+        } else if (!Validator.userIsAdult(user)) {
+            response.setReason("Participation allowed only from 21 years");
+        } else if (!Validator.userHasValidCode(user, lotteryDAOImplementation)) {
+            response.setReason("Invalid code");
         } else if (!Validator.codeUnique(user, userDAOImplementation)) {
-            response.setStatus("Fail");
             response.setReason("This code is already registered");
         } else {
             userDAOImplementation.insert(user);

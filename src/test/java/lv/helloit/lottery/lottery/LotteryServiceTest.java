@@ -102,4 +102,16 @@ public class LotteryServiceTest {
         assertEquals("WIN", response.getStatus());
     }
 
+    @Test
+    public void shouldDeleteLottery() {
+
+        Response response;
+        response = lotteryService.openRegistration(lottery);
+        Long lotteryId = response.getId();
+        response = lotteryService.deleteLottery(lotteryId);
+
+        assertEquals("OK", response.getStatus());
+
+    }
+
 }

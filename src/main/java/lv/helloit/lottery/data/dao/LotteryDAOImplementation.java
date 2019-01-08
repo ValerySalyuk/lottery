@@ -21,7 +21,7 @@ public class LotteryDAOImplementation extends DAOImplementation<Lottery> {
     }
 
     public Optional<Lottery> getById(Long id) {
-        return super.getById(id, Lottery.class);
+        return super.getById(id, Lottery.class, false);
     }
 
     public void delete(Long id) {

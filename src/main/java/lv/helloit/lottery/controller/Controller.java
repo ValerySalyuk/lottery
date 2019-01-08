@@ -73,4 +73,10 @@ public class Controller {
         return lotteryService.getLotteries();
     }
 
+    @DeleteMapping("/delete-lottery/{id}")
+    public Response delete(@PathVariable Long id) {
+        LOGGER.info("Request to delete lottery with ID : " + id);
+        return lotteryService.deleteLottery(id);
+    }
+
 }
