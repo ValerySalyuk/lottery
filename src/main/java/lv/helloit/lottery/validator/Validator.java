@@ -5,13 +5,19 @@ import lv.helloit.lottery.data.dao.UserDAOImplementation;
 import lv.helloit.lottery.lottery.Lottery;
 import lv.helloit.lottery.user.User;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Optional;
 
 public class Validator {
 
     public static boolean userHasRequiredData(User user) {
-        return !user.getEmail().isEmpty() && user.getAge() != null && !user.getCode().isEmpty();
+
+        return user.getEmail() != null
+                && !user.getEmail().isEmpty()
+                && user.getAge() != null
+                && user.getCode() != null;
     }
 
     public static boolean userIsAdult(User user) {
@@ -35,9 +41,22 @@ public class Validator {
         if (wrappedLottery.isPresent() && user.getCode().length() == 16 && user.getCode().matches("[0-9]+")) {
 
             Lottery lottery = wrappedLottery.get();
-            String year = lottery.getStartDate().toString().substring(2, 4);
-            String month = lottery.getStartDate().toString().substring(5, 7);
-            String day = lottery.getStartDate().toString().substring(8, 10);
+
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(lottery.getStartDate());
+
+            String year = Integer.toString(cal.get(Calendar.YEAR)).substring(2, 4);
+
+            String month = Integer.toString(cal.get(Calendar.MONTH) + 1);
+            if ((cal.get(Calendar.MONTH) + 1) < 10) {
+                month = "0" + month;
+            }
+
+            String day = Integer.toString(cal.get(Calendar.DAY_OF_MONTH));
+            if ((cal.get(Calendar.DAY_OF_MONTH)) < 10) {
+                day = "0" + day;
+            }
+
             String mailLength = user.getEmail().length() > 9
                     ? Integer.toString(user.getEmail().length())
                     : "0" + user.getEmail().length();
@@ -67,7 +86,7 @@ public class Validator {
     }
 
     public static boolean lotteryHasRequiredData(Lottery lottery) {
-        return !lottery.getTitle().isEmpty() && lottery.getLimit() != null;
+        return lottery.getTitle() != null && lottery.getLimit() != null && !lottery.getTitle().isEmpty();
     }
 
     public static boolean lotteryExists(Long id, LotteryDAOImplementation lotteryDAOImplementation) {
