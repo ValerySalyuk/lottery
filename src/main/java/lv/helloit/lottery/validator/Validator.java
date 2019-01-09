@@ -117,7 +117,7 @@ public class Validator {
     }
 
     public static boolean lotteryHasWinner(Lottery lottery) {
-        return lottery.getWinnerCode() != null;
+        return lottery.getWinnerCode() != null && !lottery.getWinnerCode().isEmpty();
     }
 
 }

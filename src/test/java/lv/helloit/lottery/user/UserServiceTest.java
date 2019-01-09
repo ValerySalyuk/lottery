@@ -28,7 +28,6 @@ public class UserServiceTest {
     private LotteryDAOImplementation lotteryDAOImplementationMock = mock(LotteryDAOImplementation.class);
 
     private UserService userServiceMock = new UserService(userDAOImplementationMock, lotteryDAOImplementationMock);
-    private LotteryService lotteryServiceMock = new LotteryService(lotteryDAOImplementationMock, userDAOImplementationMock);
 
     @Test
     public void shouldRegisterUser() throws ParseException {

@@ -2,65 +2,44 @@ package lv.helloit.lottery.lottery;
 
 
 import lv.helloit.lottery.data.dao.LotteryDAOImplementation;
+import lv.helloit.lottery.data.dao.UserDAOImplementation;
 import lv.helloit.lottery.response.Response;
 import lv.helloit.lottery.user.User;
-import lv.helloit.lottery.user.UserService;
-import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest
 public class LotteryServiceTest {
 
-    @Autowired
-    private LotteryService lotteryService;
+    private Long id = 1L;
 
-    @Autowired
-    private UserService userService;
+    private User userMock = mock(User.class);
+    private Lottery lotteryMock = mock(Lottery.class);
 
-    @Autowired
-    LotteryDAOImplementation lotteryDAOImplementation;  // required only to dynamically have correct codes
+    private UserDAOImplementation userDAOImplementationMock = mock(UserDAOImplementation.class);
+    private LotteryDAOImplementation lotteryDAOImplementationMock = mock(LotteryDAOImplementation.class);
 
-    private Lottery lottery;
-    private User user1;
-    private User user2;
-
-    @Before
-    public void setUp() {
-        lottery = new Lottery("Lottery for testing", true, 10, null, null, null);
-        user1 = new User("some@mail.com", (byte) 21, null, 1L, null);
-        user2 = new User("some@mail.com", (byte) 21, null, 1L, null);
-    }
-
-    private void prepare(Long id) {
-        // Prepare valid code
-        String date = lotteryDAOImplementation.getById(id).get().getStartDate().toString();
-        String year = date.substring(2, 4);
-        String month = date.substring(5, 7);
-        String day = date.substring(8, 10);
-        String validFirstPart = day + month + year + 13;
-
-        // Prepare users
-        user1.setLotteryId(id);
-        user1.setCode(validFirstPart + "00000000");
-        user2.setLotteryId(id);
-        user2.setCode(validFirstPart + "00000001");
-    }
+    private LotteryService lotteryService = new LotteryService(lotteryDAOImplementationMock, userDAOImplementationMock);
 
     @Test
     public void shouldCreateLottery() {
 
-        Response response = lotteryService.openRegistration(lottery);
+        Response response;
 
+        response = lotteryService.openRegistration(lotteryMock);
+        assertEquals("Fail", response.getStatus());
+
+        when(lotteryDAOImplementationMock.insert(lotteryMock)).thenReturn(id);
+        when(lotteryMock.getTitle()).thenReturn("title");
+        when(lotteryMock.getLimit()).thenReturn(10);
+        response = lotteryService.openRegistration(lotteryMock);
         assertEquals("OK", response.getStatus());
-
-        lotteryService.deleteLottery(response.getId());
 
     }
 
@@ -68,18 +47,18 @@ public class LotteryServiceTest {
     public void shouldCloseLottery() {
 
         Response response;
-        Long id;
-
-        response = lotteryService.openRegistration(lottery);
-        id = response.getId();
-
-        response = lotteryService.closeRegistration(id);
-        assertEquals("OK", response.getStatus());
 
         response = lotteryService.closeRegistration(id);
         assertEquals("Fail", response.getStatus());
 
-        lotteryService.deleteLottery(id);
+        when(lotteryDAOImplementationMock.getById(id)).thenReturn(Optional.ofNullable(lotteryMock));
+        when(lotteryMock.isOpen()).thenReturn(false);
+        response = lotteryService.closeRegistration(id);
+        assertEquals("Fail", response.getStatus());
+
+        when(lotteryMock.isOpen()).thenReturn(true);
+        response = lotteryService.closeRegistration(id);
+        assertEquals("OK", response.getStatus());
 
     }
 
@@ -87,25 +66,29 @@ public class LotteryServiceTest {
     public void shouldChooseWinner() {
 
         Response response;
-        Long id;
+        List<User> userList = new ArrayList<>();
 
-        response = lotteryService.openRegistration(lottery);
-        id = response.getId();
         response = lotteryService.chooseWinner(id);
         assertEquals("Fail", response.getStatus());
 
-        prepare(id);
-
-        userService.registerUser(user1);
-        userService.registerUser(user2);
+        when(lotteryDAOImplementationMock.getById(id)).thenReturn(Optional.ofNullable(lotteryMock));
+        when(lotteryMock.isOpen()).thenReturn(true);
         response = lotteryService.chooseWinner(id);
         assertEquals("Fail", response.getStatus());
 
-        lotteryService.closeRegistration(id);
+        when(lotteryMock.isOpen()).thenReturn(false);
+        response = lotteryService.chooseWinner(id);
+        assertEquals("Fail", response.getStatus());
+
+        userList.add(userMock);
+        when(lotteryMock.getUserList()).thenReturn(userList);
+        when(lotteryMock.getWinnerCode()).thenReturn("some_code");
+        response = lotteryService.chooseWinner(id);
+        assertEquals("Fail", response.getStatus());
+
+        when(lotteryMock.getWinnerCode()).thenReturn(null);
         response = lotteryService.chooseWinner(id);
         assertEquals("OK", response.getStatus());
-
-        lotteryService.deleteLottery(id);
 
     }
 
@@ -113,33 +96,37 @@ public class LotteryServiceTest {
     public void shouldReturnStatus() {
 
         Response response;
-        Long id;
+        List<User> userList = new ArrayList<>();
+        Long id = 1L;
+        String email = "some_email";
+        String code = "some_code";
 
-        response = lotteryService.getStatus(19468763L, user1.getEmail(), user1.getCode());
+        response = lotteryService.getStatus(id, email, code);
         assertEquals("ERROR", response.getStatus());
 
-        response = lotteryService.openRegistration(lottery);
-        id = response.getId();
-        prepare(id);
-        response = lotteryService.getStatus(id, user1.getEmail(), user1.getCode());
+        when(lotteryDAOImplementationMock.getById(id)).thenReturn(Optional.ofNullable(lotteryMock));
+        response = lotteryService.getStatus(id, email, code);
         assertEquals("ERROR", response.getStatus());
 
-        response = lotteryService.getStatus(id, user2.getEmail(), user2.getCode());
-        assertEquals("ERROR", response.getStatus());
-
-        userService.registerUser(user1);
-        response = lotteryService.getStatus(id, user1.getEmail(), user1.getCode());
+        userList.add(userMock);
+        when(lotteryMock.getUserList()).thenReturn(userList);
+        when(userMock.getEmail()).thenReturn(email);
+        when(userMock.getCode()).thenReturn(code);
+        when(lotteryMock.isOpen()).thenReturn(true);
+        response = lotteryService.getStatus(id, email, code);
         assertEquals("PENDING", response.getStatus());
 
-        lotteryService.closeRegistration(id);
-        response = lotteryService.getStatus(id, user1.getEmail(), user1.getCode());
+        when(lotteryMock.isOpen()).thenReturn(false);
+        response = lotteryService.getStatus(id, email, code);
         assertEquals("PENDING", response.getStatus());
 
-        lotteryService.chooseWinner(id);
-        response = lotteryService.getStatus(id, user1.getEmail(), user1.getCode());
+        when(lotteryMock.getWinnerCode()).thenReturn(code);
+        response = lotteryService.getStatus(id, email, code);
         assertEquals("WIN", response.getStatus());
 
-        lotteryService.deleteLottery(id);
+        when(lotteryMock.getWinnerCode()).thenReturn("another_code");
+        response = lotteryService.getStatus(id, email, code);
+        assertEquals("LOOSE", response.getStatus());
 
     }
 
@@ -147,14 +134,13 @@ public class LotteryServiceTest {
     public void shouldDeleteLottery() {
 
         Response response;
-        response = lotteryService.openRegistration(lottery);
-        Long id = response.getId();
-        response = lotteryService.deleteLottery(id);
-
-        assertEquals("OK", response.getStatus());
 
         response = lotteryService.deleteLottery(id);
         assertEquals("Fail", response.getStatus());
+
+        when(lotteryDAOImplementationMock.getById(id)).thenReturn(Optional.ofNullable(lotteryMock));
+        response = lotteryService.deleteLottery(id);
+        assertEquals("OK", response.getStatus());
 
     }
 

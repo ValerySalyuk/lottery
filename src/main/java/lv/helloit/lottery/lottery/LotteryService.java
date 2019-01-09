@@ -84,10 +84,10 @@ public class LotteryService {
             lottery = wrappedLottery.get();
             if (lottery.isOpen()) {
                 response.setReason("Lottery with ID: " + id + " is still open for registration");
-            } else if (Validator.lotteryHasWinner(lottery)) {
-                response.setReason("Lottery with ID: " + id + " already has a winner");
             } else if (!Validator.lotteryHasUsers(lottery)) {
                 response.setReason("Lottery with ID: " + id + " has no participants");
+            } else if (Validator.lotteryHasWinner(lottery)) {
+                response.setReason("Lottery with ID: " + id + " already has a winner");
             } else {
                 Random random = new Random();
                 int winner = random.nextInt(lottery.getUserList().size()) + 1;
