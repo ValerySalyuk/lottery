@@ -11,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
-import java.util.List;
 
 @RestController
 public class Controller {
@@ -42,7 +41,7 @@ public class Controller {
     }
 
     @PutMapping("/stop-registration/{id}")
-    public Response stopRegistartion (@PathVariable Long id) {
+    public Response stopRegistration (@PathVariable Long id) {
         LOGGER.info("Stopping registration. Lottery ID: " + id);
         return lotteryService.closeRegistration(id);
     }

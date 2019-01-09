@@ -11,13 +11,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 public class LotteryServiceTest {
 
     private Long id = 1L;
+    private Response response;
 
     private User userMock = mock(User.class);
     private Lottery lotteryMock = mock(Lottery.class);
@@ -29,8 +30,6 @@ public class LotteryServiceTest {
 
     @Test
     public void shouldCreateLottery() {
-
-        Response response;
 
         response = lotteryService.openRegistration(lotteryMock);
         assertEquals("Fail", response.getStatus());
@@ -65,7 +64,6 @@ public class LotteryServiceTest {
     @Test
     public void shouldChooseWinner() {
 
-        Response response;
         List<User> userList = new ArrayList<>();
 
         response = lotteryService.chooseWinner(id);
@@ -95,7 +93,6 @@ public class LotteryServiceTest {
     @Test
     public void shouldReturnStatus() {
 
-        Response response;
         List<User> userList = new ArrayList<>();
         Long id = 1L;
         String email = "some_email";
@@ -131,9 +128,19 @@ public class LotteryServiceTest {
     }
 
     @Test
-    public void shouldDeleteLottery() {
+    public void shouldReturnStats() {
 
-        Response response;
+        List<Lottery> list = new ArrayList<>();
+
+        assertTrue(lotteryService.getStats().isEmpty());
+
+        list.add(lotteryMock);
+        when(lotteryDAOImplementationMock.getAll()).thenReturn(list);
+        assertFalse(lotteryService.getStats().isEmpty());
+    }
+
+    @Test
+    public void shouldDeleteLottery() {
 
         response = lotteryService.deleteLottery(id);
         assertEquals("Fail", response.getStatus());
