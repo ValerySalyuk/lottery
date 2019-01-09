@@ -25,7 +25,7 @@ public class Validator {
     }
 
     public static boolean userLimitReached(Lottery lottery) {
-        return lottery.getUserList().size() == lottery.getLimit();
+        return lottery.getUserList().size() >= lottery.getLimit();
     }
 
     public static boolean emailValid(String email) {

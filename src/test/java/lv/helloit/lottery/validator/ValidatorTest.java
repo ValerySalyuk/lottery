@@ -17,6 +17,7 @@ import static org.mockito.Mockito.*;
 
 public class ValidatorTest {
 
+    private Long id = 1L;
     private Lottery lotteryMock = mock(Lottery.class);
     private User userMock = mock(User.class);
     private LotteryDAOImplementation lotteryDAOImplementationMock = mock(LotteryDAOImplementation.class);
@@ -55,6 +56,7 @@ public class ValidatorTest {
     public void shouldCheckUserLimit() {
 
         List<User> userList = new ArrayList<>();
+
         userList.add(userMock);
         when(lotteryMock.getUserList()).thenReturn(userList);
         when(lotteryMock.getLimit()).thenReturn(20);
@@ -81,7 +83,7 @@ public class ValidatorTest {
 
         when(userMock.getCode()).thenReturn("0901191300000000");
         when(userMock.getEmail()).thenReturn("some@mail.com");
-        when(lotteryMock.getId()).thenReturn(1L);
+        when(lotteryMock.getId()).thenReturn(id);
         when(userMock.getLottery()).thenReturn(lotteryMock);
         when(lotteryDAOImplementationMock.getById(lotteryMock.getId())).thenReturn(Optional.of(lotteryMock));
         when(lotteryMock.getStartDate()).thenReturn(format.parse( "2019-01-09" ));
@@ -127,22 +129,21 @@ public class ValidatorTest {
     @Test
     public void shouldCheckIfLotteryExists() {
 
-        assertFalse(Validator.lotteryExists(1L, lotteryDAOImplementationMock));
+        assertFalse(Validator.lotteryExists(id, lotteryDAOImplementationMock));
 
-        when(lotteryDAOImplementationMock.getById(1L)).thenReturn(Optional.ofNullable(lotteryMock));
-        assertTrue(Validator.lotteryExists(1L, lotteryDAOImplementationMock));
+        when(lotteryDAOImplementationMock.getById(id)).thenReturn(Optional.ofNullable(lotteryMock));
+        assertTrue(Validator.lotteryExists(id, lotteryDAOImplementationMock));
 
     }
 
     @Test
     public void shouldCheckIfUserExistsInLottery() {
 
-        Long id = 1L;
         String email = "some_mail";
         String code = "some_code";
         List<User> userList = new ArrayList<>();
 
-        when(lotteryDAOImplementationMock.getById(1L)).thenReturn(Optional.ofNullable(lotteryMock));
+        when(lotteryDAOImplementationMock.getById(id)).thenReturn(Optional.ofNullable(lotteryMock));
         assertFalse(Validator.userInLotteryExists(id, email, code, lotteryDAOImplementationMock));
 
         when(lotteryMock.getUserList()).thenReturn(userList);
