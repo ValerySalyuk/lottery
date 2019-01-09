@@ -3,7 +3,6 @@ package lv.helloit.lottery.controller;
 import lv.helloit.lottery.lottery.Lottery;
 import lv.helloit.lottery.response.Response;
 import lv.helloit.lottery.user.User;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +12,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import java.util.Calendar;
 import java.util.Date;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
