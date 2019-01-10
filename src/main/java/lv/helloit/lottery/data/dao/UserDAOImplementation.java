@@ -1,6 +1,5 @@
 package lv.helloit.lottery.data.dao;
 
-import lv.helloit.lottery.lottery.Lottery;
 import lv.helloit.lottery.user.User;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;

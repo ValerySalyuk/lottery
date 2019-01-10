@@ -1,5 +1,7 @@
 package lv.helloit.lottery.controller;
 
+import lv.helloit.lottery.admin.Admin;
+import lv.helloit.lottery.admin.AdminService;
 import lv.helloit.lottery.lottery.Lottery;
 import lv.helloit.lottery.lottery.LotteryService;
 import lv.helloit.lottery.response.Response;
@@ -19,11 +21,13 @@ public class Controller {
 
     private final LotteryService lotteryService;
     private final UserService userService;
+    private final AdminService adminService;
 
     @Autowired
-    public Controller(LotteryService lotteryService, UserService userService) {
+    public Controller(LotteryService lotteryService, UserService userService, AdminService adminService) {
         this.lotteryService = lotteryService;
         this.userService = userService;
+        this.adminService = adminService;
     }
 
     @PostMapping("/start-registration")
@@ -36,7 +40,7 @@ public class Controller {
 
     @PostMapping("/register")
     public Response register(@RequestBody User user) {
-        LOGGER.info("Registering user.");
+        LOGGER.info("Registering user");
         return userService.registerUser(user);
     }
 
@@ -76,6 +80,12 @@ public class Controller {
     public Response delete(@PathVariable Long id) {
         LOGGER.info("Request to delete lottery with ID : " + id);
         return lotteryService.deleteLottery(id);
+    }
+
+    @PostMapping("/register-admin")
+    public Response addAdmin(@RequestBody Admin admin) {
+        LOGGER.info("Creating admin user");
+        return adminService.addAdmin(admin);
     }
 
 }

@@ -138,7 +138,4 @@ public class Lottery {
         this.userList = userList;
     }
 
-    public Integer userCount() {
-        return userList.size();
-    }
 }

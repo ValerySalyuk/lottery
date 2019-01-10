@@ -1,9 +1,9 @@
 function loadLotteries() {
     fetch("/stats", {
         method: "get",
-        // headers: {
-        //     'Authorization': 'Basic ' + btoa(localStorage.getItem("currentUsername") + ":" + localStorage.getItem("currentPassword"))
-        // }
+        headers: {
+            'Authorization': 'Basic ' + btoa(localStorage.getItem("currentUsername") + ":" + localStorage.getItem("currentPassword"))
+        }
     })
         .then(resp => resp.json())
         .then(lotteries => {
@@ -40,9 +40,9 @@ function addLottery(lottery) {
 function closeLottery(id) {
     fetch("/stop-registration/" + id, {
         method: "put",
-        // headers: {
-        //     'Authorization': 'Basic ' + btoa(localStorage.getItem("currentUsername") + ":" + localStorage.getItem("currentPassword"))
-        // }
+        headers: {
+            'Authorization': 'Basic ' + btoa(localStorage.getItem("currentUsername") + ":" + localStorage.getItem("currentPassword"))
+        }
     })
         .then((resp) => resp.json())
         .then(response => {
@@ -57,9 +57,9 @@ function closeLottery(id) {
 function chooseWinner(id) {
     fetch("/choose-winner/" + id, {
         method: "put",
-        // headers: {
-        //     'Authorization': 'Basic ' + btoa(localStorage.getItem("currentUsername") + ":" + localStorage.getItem("currentPassword"))
-        // }
+        headers: {
+            'Authorization': 'Basic ' + btoa(localStorage.getItem("currentUsername") + ":" + localStorage.getItem("currentPassword"))
+        }
     })
         .then((resp) => resp.json())
         .then(response => {
@@ -72,7 +72,7 @@ function chooseWinner(id) {
 }
 
 function openNewPage() {
-    window.open("/admin/newLottery.html","_self");
+    window.open("/admin/newlottery.html","_self");
 }
 
 function startNewLottery() {
@@ -88,7 +88,7 @@ function startNewLottery() {
         }),
         headers: {
             "Content-Type": "application/json;charset=UTF-8",
-            // 'Authorization': 'Basic ' + btoa(/*"login_user:VWRYDQE2"*/localStorage.getItem("currentUsername") + ":" + localStorage.getItem("currentPassword"))
+            'Authorization': 'Basic ' + btoa(localStorage.getItem("currentUsername") + ":" + localStorage.getItem("currentPassword"))
         }
     })
         .then((resp) => resp.json())
@@ -104,9 +104,9 @@ function startNewLottery() {
 function deleteLottery(id) {
     fetch("/delete-lottery/" + id, {
         method: "delete",
-        // headers: {
-        //     'Authorization': 'Basic ' + btoa(localStorage.getItem("currentUsername") + ":" + localStorage.getItem("currentPassword"))
-        // }
+        headers: {
+            'Authorization': 'Basic ' + btoa(localStorage.getItem("currentUsername") + ":" + localStorage.getItem("currentPassword"))
+        }
     })
         .then((resp) => resp.json())
         .then(response => {

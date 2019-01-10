@@ -1,5 +1,7 @@
 package lv.helloit.lottery.validator;
 
+import lv.helloit.lottery.admin.Admin;
+import lv.helloit.lottery.data.dao.AdminDAOImplementation;
 import lv.helloit.lottery.data.dao.LotteryDAOImplementation;
 import lv.helloit.lottery.data.dao.UserDAOImplementation;
 import lv.helloit.lottery.lottery.Lottery;
@@ -118,6 +120,15 @@ public class Validator {
 
     public static boolean lotteryHasWinner(Lottery lottery) {
         return lottery.getWinnerCode() != null && !lottery.getWinnerCode().isEmpty();
+    }
+
+    public static boolean adminHasRequiredData(Admin admin) {
+        return admin.getLogin() != null && !admin.getLogin().isEmpty()
+                && admin.getPassword() != null && !admin.getPassword().isEmpty();
+    }
+
+    public static boolean adminLoginExists(Admin admin, AdminDAOImplementation adminDAOImplementation) {
+        return adminDAOImplementation.getByLogin(admin.getLogin()).isPresent();
     }
 
 }
