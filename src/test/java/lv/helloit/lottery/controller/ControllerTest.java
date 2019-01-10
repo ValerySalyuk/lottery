@@ -1,5 +1,8 @@
 package lv.helloit.lottery.controller;
 
+import lv.helloit.lottery.admin.Admin;
+import lv.helloit.lottery.admin.AdminService;
+import lv.helloit.lottery.data.dao.AdminDAOImplementation;
 import lv.helloit.lottery.lottery.Lottery;
 import lv.helloit.lottery.response.Response;
 import lv.helloit.lottery.user.User;
@@ -21,9 +24,16 @@ public class ControllerTest {
     @Autowired
     private Controller controller;
 
+    @Autowired
+    private AdminService adminService;
+
     private Lottery lottery = new Lottery();
+
     private User user1 = new User();
     private User user2 = new User();
+
+    private Admin admin = new Admin();
+
     private String code;
     private Long lotteryId;
     private Response response;
@@ -64,6 +74,11 @@ public class ControllerTest {
         user2.setCode(code.replace("00000000", "00000001"));
         user2.setLotteryId(id);
 
+    }
+
+    private void prepareAdmin() {
+        admin.setLogin("some_login");
+        admin.setPassword("some_password");
     }
 
     @Test
@@ -168,5 +183,36 @@ public class ControllerTest {
         lotteryId = response.getId();
         response = controller.delete(lotteryId);
         assertEquals("OK", response.getStatus());
+    }
+
+    @Test
+    public void shouldAddAdmin() {
+
+        response = controller.addAdmin(admin);
+        assertEquals("Fail", response.getStatus());
+
+        prepareAdmin();
+        response = controller.addAdmin(admin);
+        assertEquals("OK", response.getStatus());
+
+        adminService.deleteAdmin(response.getId());
+
+    }
+
+    @Test
+    public void shouldCheckCredentials() {
+
+        Long id;
+
+        response = controller.checkCredentials(admin.getLogin(), admin.getPassword());
+        assertEquals("Fail", response.getStatus());
+
+        prepareAdmin();
+        response = controller.addAdmin(admin);
+        id = response.getId();
+        response = controller.checkCredentials(admin.getLogin(), admin.getPassword());
+        assertEquals("OK", response.getStatus());
+
+        adminService.deleteAdmin(id);
     }
 }

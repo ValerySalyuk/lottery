@@ -1,16 +1,13 @@
 function loadLotteries() {
     fetch("/lotteries", {
         method: "get",
-        // headers: {
-        //     'Authorization': 'Basic ' + btoa(localStorage.getItem("currentUsername") + ":" + localStorage.getItem("currentPassword"))
-        // }
     })
         .then(resp => resp.json())
         .then(lotteries => {
             for (const lottery of lotteries) {
             addLottery(lottery);
         }
-});
+    });
 }
 
 function addLottery(lottery) {

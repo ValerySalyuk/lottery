@@ -1,9 +1,27 @@
 function saveCredentials() {
 
-    localStorage.setItem("currentUsername", document.getElementById("username").value);
-    localStorage.setItem("currentPassword", document.getElementById("password").value);
+    const username = document.getElementById("username").value;
+    const password = document.getElementById("password").value;
 
-    window.location.href = "/admin/admintools.html";
+    if (username && password) {
+
+        fetch("/check-credentials?login=" + username + "&password=" +password, {
+            method: "get",
+        })
+            .then(resp => resp.json())
+            .then(response => {
+                if (response.status === "OK") {
+                    localStorage.setItem("currentUsername", username);
+                    localStorage.setItem("currentPassword", password);
+                    window.location.href = "/admin/admintools.html";
+                } else {
+                    alert("Wrong credentials")
+                }
+        });
+
+    } else {
+        alert("Please provide credentials")
+    }
 
 }
 

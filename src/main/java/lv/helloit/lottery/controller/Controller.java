@@ -88,4 +88,10 @@ public class Controller {
         return adminService.addAdmin(admin);
     }
 
+    @GetMapping("/check-credentials")
+    public Response checkCredentials(@RequestParam String login, String password) {
+        LOGGER.info("Checking credentials for " + login);
+        return adminService.checkCredentials(login, password);
+    }
+
 }

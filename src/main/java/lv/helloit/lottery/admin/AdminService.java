@@ -32,6 +32,7 @@ public class AdminService {
 
     public Response addAdmin(Admin admin) {
 
+        Long id;
         Response response = new Response();
         response.setStatus("Fail");
 
@@ -45,8 +46,9 @@ public class AdminService {
             String passwordHash = generatePasswordHash(password);
             LOGGER.info("Password hash: " + passwordHash);
             admin.setPasswordHash(passwordHash);
-            adminDAOImplementation.insert(admin);
+            id = adminDAOImplementation.insert(admin);
             response.setStatus("OK");
+            response.setId(id);
         }
 
         return response;
@@ -57,10 +59,42 @@ public class AdminService {
         return Sha512DigestUtils.shaHex(password + securityProperties.getSalt());
     }
 
-    public void deleteAdmin(Long id) {
+    public Response deleteAdmin(Long id) {
+
+        Response response = new Response();
+        response.setStatus("Fail");
+
         if (adminDAOImplementation.getById(id).isPresent()) {
             adminDAOImplementation.delete(id);
+            response.setStatus("OK");
+        } else {
+            response.setReason("Admin with ID: " + id + " does not exist");
         }
+
+        return response;
+    }
+
+    public Response checkCredentials(String login, String password) {
+
+        Response response = new Response();
+        response.setStatus("Fail");
+
+        Optional<Admin> wrappedAdmin = adminDAOImplementation.getByLogin(login);
+
+        if (!wrappedAdmin.isPresent()) {
+            response.setReason("Login does not exist");
+        } else {
+            String realPasswordHash = wrappedAdmin.get().getPasswordHash();
+            String incomingPasswordHash = generatePasswordHash(password);
+
+            if (realPasswordHash.equals(incomingPasswordHash)) {
+                response.setStatus("OK");
+            } else {
+                response.setReason("Wrong password");
+            }
+        }
+
+        return response;
     }
 
 }
