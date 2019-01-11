@@ -2,7 +2,6 @@ package lv.helloit.lottery.controller;
 
 import lv.helloit.lottery.admin.Admin;
 import lv.helloit.lottery.admin.AdminService;
-import lv.helloit.lottery.data.dao.AdminDAOImplementation;
 import lv.helloit.lottery.lottery.Lottery;
 import lv.helloit.lottery.response.Response;
 import lv.helloit.lottery.user.User;
@@ -62,7 +61,7 @@ public class ControllerTest {
         }
         // Sorry for code duplicating, it's only for test (didn't want to create a new class and implement it)
 
-        code = day + month + year + 13 + "00000000";
+        code = day + month + year + 13 + "88888888";
 
         user1.setEmail("some@mail.com");
         user1.setAge((byte) 21);
@@ -71,7 +70,7 @@ public class ControllerTest {
 
         user2.setEmail("some@mail.com");
         user2.setAge((byte) 21);
-        user2.setCode(code.replace("00000000", "00000001"));
+        user2.setCode(code.replace("88888888", "88888881"));
         user2.setLotteryId(id);
 
     }
