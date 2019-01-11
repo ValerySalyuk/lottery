@@ -36,7 +36,7 @@ public class LotteryService {
                 response.setStatus("OK");
                 response.setId(id);
             } catch (Exception e) {
-                response.setReason("Lottery name already exists!");
+                response.setReason(e.getCause().toString());
             }
         } else {
             response.setReason("Please provide all required data");

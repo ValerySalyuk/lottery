@@ -1,11 +1,9 @@
 package lv.helloit.lottery.user;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lv.helloit.lottery.lottery.Lottery;
 
 import javax.persistence.*;
-import javax.validation.Valid;
 import java.util.Objects;
 
 @Entity
@@ -13,7 +11,7 @@ import java.util.Objects;
 public class User {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue
     @Column(name = "id")
     private Long id;
     @Column(name = "email")
