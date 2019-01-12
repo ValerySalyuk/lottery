@@ -29,7 +29,7 @@ public class Lottery {
     private Date endDate;
     @Column(name = "winner_code")
     private String winnerCode;
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "lottery")
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "lottery")
     @JsonManagedReference
     @JsonIgnore
     private List<User> userList;

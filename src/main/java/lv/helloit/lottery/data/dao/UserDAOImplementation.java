@@ -21,7 +21,7 @@ public class UserDAOImplementation extends DAOImplementation<User> {
     }
 
     public Optional<User> getById(Long id) {
-        return super.getById(id, User.class, false);
+        return super.getById(id, User.class);
     }
 
     public void delete(Long id) {

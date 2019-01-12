@@ -26,7 +26,7 @@ public class AdminDAOImplementation extends DAOImplementation<Admin> {
     }
 
     public Optional<Admin> getById(Long id) {
-        return super.getById(id, Admin.class, false);
+        return super.getById(id, Admin.class/*, false*/);
     }
 
     public Optional<Admin> getByLogin(String login) {

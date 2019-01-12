@@ -7,7 +7,6 @@ import lv.helloit.lottery.data.dao.UserDAOImplementation;
 import lv.helloit.lottery.lottery.Lottery;
 import lv.helloit.lottery.user.User;
 
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Optional;

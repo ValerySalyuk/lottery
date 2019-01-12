@@ -29,14 +29,14 @@ public abstract class DAOImplementation<T> implements DAO<T> {
         query.select(root);
 
         List<T> tList = session.createQuery(query).getResultList();
-//        session.close();
+        session.close();
 
         return tList;
 
     }
 
     @Override
-    public Optional<T> getById(Long id, Class<T> tClass, boolean closeSession) {
+    public Optional<T> getById(Long id, Class<T> tClass) {
 
         Session session = sessionFactory.openSession();
         T obj = null;
@@ -44,9 +44,7 @@ public abstract class DAOImplementation<T> implements DAO<T> {
             obj = session.get(tClass, id);
         }
 
-        if (closeSession) {
-            session.close();
-        }
+        session.close();
 
         return Optional.ofNullable(obj);
 
@@ -73,7 +71,7 @@ public abstract class DAOImplementation<T> implements DAO<T> {
         Session session = sessionFactory.openSession();
         Transaction tx = session.beginTransaction();
 
-        T obj = this.getById(taskId, tClass, true).get();
+        T obj = this.getById(taskId, tClass).get();
 
         session.delete(obj);
 

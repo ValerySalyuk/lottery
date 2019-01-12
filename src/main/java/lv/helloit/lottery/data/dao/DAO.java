@@ -7,7 +7,7 @@ public interface DAO<T> {
 
     List<T> getAll(Class<T> tClass);
 
-    Optional<T> getById(Long id, Class<T> tClass, boolean closeSession);
+    Optional<T> getById(Long id, Class<T> tClass);
 
     Long insert(T t);
 
