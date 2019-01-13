@@ -75,6 +75,10 @@ function openNewPage() {
     window.open("/admin/newlottery.html","_self");
 }
 
+function goBack() {
+    window.location.href="/admin/admintools.html";
+}
+
 function startNewLottery() {
     const title = document.getElementById("title").value;
     const limit = document.getElementById("limit").value;

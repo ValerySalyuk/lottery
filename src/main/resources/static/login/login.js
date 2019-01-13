@@ -29,6 +29,10 @@ function openRegisterForm() {
     window.location.href = "register.html";
 }
 
+function goBack() {
+    window.location.href = "../index.html";
+}
+
 function registerAdmin() {
     const login = document.getElementById("login").value;
     const password = document.getElementById("password").value;

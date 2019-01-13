@@ -12,8 +12,6 @@
             org.postgresql.Driver
         </property>
 
-        <!-- Assume test is the database name -->
-
         <property name = "hibernate.connection.url">
             jdbc:postgresql://ec2-54-246-85-234.eu-west-1.compute.amazonaws.com:5432/d38fg66uk8rvv9?ssl=true&amp;sslfactory=org.postgresql.ssl.NonValidatingFactory
         </property>
