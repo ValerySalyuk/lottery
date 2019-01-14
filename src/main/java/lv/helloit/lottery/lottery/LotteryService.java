@@ -39,7 +39,7 @@ public class LotteryService {
                 if (e.getCause().getCause().toString().contains("Detail: Key (title)")) {
                     response.setReason("Lottery title should be unique");
                 } else {
-                    response.setReason(e.getCause().toString());
+                    response.setReason(e.getCause().getCause().toString());
                 }
             }
         } else {
