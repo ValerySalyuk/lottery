@@ -14,7 +14,7 @@ import java.util.Objects;
 public class Lottery {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id")
     private Long id;
     @Column(name = "title", unique = true)

@@ -29,8 +29,12 @@ function openRegisterForm() {
     window.location.href = "register.html";
 }
 
-function goBack() {
+function goBackToIndex() {
     window.location.href = "../index.html";
+}
+
+function goBackToLogin() {
+    window.location.href = "login.html";
 }
 
 function registerAdmin() {
@@ -47,7 +51,6 @@ function registerAdmin() {
             }),
             headers: {
                 "Content-Type": "application/json;charset=UTF-8",
-                // 'Authorization': 'Basic ' + btoa(localStorage.getItem("currentUsername") + ":" + localStorage.getItem("currentPassword"))
             }
         })
             .then((resp) => resp.json())

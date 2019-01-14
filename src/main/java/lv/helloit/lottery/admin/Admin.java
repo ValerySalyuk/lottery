@@ -13,7 +13,7 @@ import java.util.Objects;
 public class Admin {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id")
     private Long id;
     @Column(name = "login", unique = true)

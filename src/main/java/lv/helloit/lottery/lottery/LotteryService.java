@@ -36,7 +36,7 @@ public class LotteryService {
                 response.setStatus("OK");
                 response.setId(id);
             } catch (Exception e) {
-                if (e.getLocalizedMessage().contains("ConstraintViolationException")) {
+                if (e.getCause().getCause().toString().contains("Detail: Key (title)")) {
                     response.setReason("Lottery title should be unique");
                 } else {
                     response.setReason(e.getCause().toString());
